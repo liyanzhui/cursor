@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮团购App - 登录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px; /* iPhone 11 Pro Max width */
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-back {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: #ff6633;
+            color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .welcome-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .sub-text {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .login-tabs {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 30px;
+        }
+        
+        .login-tab {
+            flex: 1;
+            text-align: center;
+            padding-bottom: 10px;
+            font-size: 16px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .login-tab.active {
+            color: #ff6633;
+            border-bottom: 2px solid #ff6633;
+            font-weight: 500;
+        }
+        
+        .login-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            height: 48px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            padding: 0 20px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .form-control:focus {
+            border-color: #ff6633;
+        }
+        
+        .verify-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .verify-input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .verify-btn {
+            width: 120px;
+            height: 48px;
+            background: white;
+            color: #ff6633;
+            border: 1px solid #ff6633;
+            border-radius: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .login-btn {
+            background-color: #ff6633;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            height: 48px;
+        }
+        
+        .login-btn:disabled {
+            background-color: #ffc1ad;
+            cursor: not-allowed;
+        }
+        
+        .wechat-login {
+            text-align: center;
+        }
+        
+        .wechat-btn {
+            width: 100%;
+            height: 48px;
+            background: #07c160;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .wechat-btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .other-login {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #ccc;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #f0f0f0;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+        
+        .terms {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 40px;
+        }
+        
+        .terms a {
+            color: #ff6633;
+            text-decoration: none;
+        }
+        
+        /* 模拟选项卡切换 */
+        #phone-tab-content {
+            display: block;
+        }
+        
+        #wechat-tab-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 原型导航链接 - 实际App不需要 -->
+    <div class="prototype-links">
+        <a href="index.html">首页</a>
+        <a href="detail.html">餐饮券详情</a>
+        <a href="login.html">登录</a>
+        <a href="purchase.html">购买团购</a>
+        <a href="profile.html">个人中心</a>
+        <a href="my-groupbuys.html">我的团购</a>
+        <a href="search.html">搜索</a>
+        <a href="favorites.html">收藏餐厅</a>
+        <a href="wallet.html">我的钱包</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <a href="javascript:history.back()" class="header-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="header-title">登录/注册</div>
+            <div style="width: 24px;"></div>
+        </div>
+        
+        <div class="content">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="welcome-text">欢迎来到餐饮团购</div>
+                <div class="sub-text">登录后体验完整服务</div>
+            </div>
+            
+            <div class="login-tabs">
+                <div class="login-tab active" id="phone-tab" onclick="switchTab('phone')">手机号登录</div>
+                <div class="login-tab" id="wechat-tab" onclick="switchTab('wechat')">微信登录</div>
+            </div>
+            
+            <div id="phone-tab-content">
+                <div class="login-form">
+                    <div class="form-group">
+                        <input type="tel" class="form-control" placeholder="请输入手机号" maxlength="11">
+                    </div>
+                    <div class="form-group verify-group">
+                        <input type="text" class="form-control verify-input" placeholder="请输入验证码" maxlength="6">
+                        <button class="verify-btn">获取验证码</button>
+                    </div>
+                    <button class="login-btn">登录</button>
+                </div>
+                
+                <div class="divider">
+                    <span>其他登录方式</span>
+                </div>
+                
+                <div class="wechat-login">
+                    <button class="wechat-btn">
+                        <i class="fab fa-weixin"></i>
+                        微信登录
+                    </button>
+                </div>
+            </div>
+            
+            <div id="wechat-tab-content">
+                <div class="wechat-login" style="margin: 50px 0;">
+                    <div style="width: 180px; height: 180px; margin: 0 auto; background: #f5f5f5; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        <i class="fas fa-qrcode" style="font-size: 80px; color: #ddd;"></i>
+                    </div>
+                    <div style="color: #666; margin-bottom: 40px;">
+                        打开微信，扫一扫登录
+                    </div>
+                    <button class="wechat-btn">
+                        <i class="fab fa-weixin"></i>
+                        打开微信
+                    </button>
+                </div>
+                
+                <div class="divider">
+                    <span>其他登录方式</span>
+                </div>
+                
+                <div class="login-form">
+                    <button class="login-btn" style="background: white; color: #ff6633; border: 1px solid #ff6633;" onclick="switchTab('phone')">
+                        手机号登录
+                    </button>
+                </div>
+            </div>
+            
+            <div class="terms">
+                登录即代表您已同意 <a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tab) {
+            if (tab === 'phone') {
+                document.getElementById('phone-tab').classList.add('active');
+                document.getElementById('wechat-tab').classList.remove('active');
+                document.getElementById('phone-tab-content').style.display = 'block';
+                document.getElementById('wechat-tab-content').style.display = 'none';
+            } else {
+                document.getElementById('wechat-tab').classList.add('active');
+                document.getElementById('phone-tab').classList.remove('active');
+                document.getElementById('wechat-tab-content').style.display = 'block';
+                document.getElementById('phone-tab-content').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮团购App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px; /* iPhone 11 Pro Max width */
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            height: 60px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-item.active {
+            color: #ff6633;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-back {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .content {
+            padding-bottom: 70px;
+        }
+        
+        .btn-primary {
+            background-color: #ff6633;
+            color: white;
+            border: none;
+            border-radius: 22px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #ff6633;
+            border: 1px solid #ff6633;
+            border-radius: 22px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .list-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .divider {
+            height: 10px;
+            background-color: #f8f8f8;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            background-color: #fff2eb;
+            color: #ff6633;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .price {
+            color: #ff6633;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        /* 页面导航链接 */
+        .page-nav {
+            padding: 20px;
+            background: #333;
+            color: white;
+        }
+        
+        .page-nav a {
+            display: block;
+            color: white;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+        
+        /* 实际App不需要此部分 */
+        .prototype-links {
+            padding: 20px;
+            background: #333;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            border-radius: 0 0 0 10px;
+        }
+        
+        .prototype-links a {
+            display: block;
+            color: white;
+            margin: 10px 0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* 首页特定样式 */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin: 15px;
+        }
+        
+        .search-bar i {
+            color: #999;
+            margin-right: 10px;
+        }
+        
+        .search-input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .categories {
+            display: flex;
+            padding: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 20px;
+            min-width: 60px;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: #fff2eb;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #ff6633;
+        }
+        
+        .category-name {
+            font-size: 12px;
+        }
+        
+        .deal-card {
+            background: white;
+            margin: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .deal-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .deal-content {
+            padding: 15px;
+        }
+        
+        .deal-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .deal-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .deal-progress {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 5px;
+            background: #f5f5f5;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ff6633;
+        }
+        
+        .deal-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .timer {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .timer i {
+            margin-right: 5px;
+            color: #ff6633;
+        }
+        
+        .join-btn {
+            background: #ff6633;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 原型导航链接 - 实际App不需要 -->
+    <div class="prototype-links">
+        <a href="index.html">首页</a>
+        <a href="detail.html">餐饮券详情</a>
+        <a href="login.html">登录</a>
+        <a href="purchase.html">购买团购</a>
+        <a href="profile.html">个人中心</a>
+        <a href="my-groupbuys.html">我的团购</a>
+        <a href="search.html">搜索</a>
+        <a href="favorites.html">收藏餐厅</a>
+        <a href="wallet.html">我的钱包</a>
+    </div>
+
+    <div class="container">
+        <!-- 首页内容 -->
+        <div class="header">
+            <div class="header-title">餐饮团购</div>
+        </div>
+        
+        <div class="content">
+            <!-- 搜索栏 -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" placeholder="搜索餐厅、美食" />
+            </div>
+            
+            <!-- 分类导航 -->
+            <div class="categories">
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="category-name">中餐</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-hamburger"></i>
+                    </div>
+                    <div class="category-name">西餐</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div class="category-name">咖啡</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-pizza-slice"></i>
+                    </div>
+                    <div class="category-name">披萨</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <div class="category-name">海鲜</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-ice-cream"></i>
+                    </div>
+                    <div class="category-name">甜品</div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <div class="category-name">蛋糕</div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 团购列表 -->
+            <div class="deal-card">
+                <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="餐厅照片" class="deal-image" />
+                <div class="deal-content">
+                    <div class="deal-title">重庆火锅双人套餐</div>
+                    <div class="tag">麻辣鲜香</div>
+                    <div class="tag">双人餐</div>
+                    <div class="deal-info">
+                        <div class="price">¥159<span class="original-price">¥268</span></div>
+                        <div>已售32</div>
+                    </div>
+                    <div class="deal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%;"></div>
+                        </div>
+                        <div>7/10人</div>
+                    </div>
+                    <div class="deal-action">
+                        <div class="timer">
+                            <i class="far fa-clock"></i>
+                            <span>剩余 2天 13:45:30</span>
+                        </div>
+                        <button class="join-btn">加入团购</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deal-card">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="餐厅照片" class="deal-image" />
+                <div class="deal-content">
+                    <div class="deal-title">日式料理四人餐</div>
+                    <div class="tag">刺身拼盘</div>
+                    <div class="tag">寿司套餐</div>
+                    <div class="deal-info">
+                        <div class="price">¥299<span class="original-price">¥458</span></div>
+                        <div>已售57</div>
+                    </div>
+                    <div class="deal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                        <div>12/30人</div>
+                    </div>
+                    <div class="deal-action">
+                        <div class="timer">
+                            <i class="far fa-clock"></i>
+                            <span>剩余 5天 08:23:15</span>
+                        </div>
+                        <button class="join-btn">加入团购</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deal-card">
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="餐厅照片" class="deal-image" />
+                <div class="deal-content">
+                    <div class="deal-title">西餐牛排双人套餐</div>
+                    <div class="tag">和牛牛排</div>
+                    <div class="tag">红酒</div>
+                    <div class="deal-info">
+                        <div class="price">¥399<span class="original-price">¥598</span></div>
+                        <div>已售28</div>
+                    </div>
+                    <div class="deal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                        <div>18/20人</div>
+                    </div>
+                    <div class="deal-action">
+                        <div class="timer">
+                            <i class="far fa-clock"></i>
+                            <span>剩余 1天 03:12:45</span>
+                        </div>
+                        <button class="join-btn">加入团购</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="navbar">
+            <a href="index.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="search.html" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>发现</span>
+            </a>
+            <a href="my-groupbuys.html" class="nav-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>订单</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

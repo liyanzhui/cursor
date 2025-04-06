@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮团购App - 个人中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px; /* iPhone 11 Pro Max width */
+            margin: 0 auto;
+            background: #f8f8f8;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-right {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .content {
+            padding-bottom: 70px;
+        }
+        
+        .navbar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            height: 60px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-item.active {
+            color: #ff6633;
+        }
+        
+        .user-card {
+            background: white;
+            padding: 20px 15px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 35px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .user-id {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .arrow-icon {
+            color: #ccc;
+        }
+        
+        .section-card {
+            background: white;
+            margin-bottom: 10px;
+        }
+        
+        .section-header {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 15px 0;
+        }
+        
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: #fff2eb;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #ff6633;
+            font-size: 20px;
+        }
+        
+        .service-name {
+            font-size: 12px;
+        }
+        
+        .list-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #f5f5f5;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #ff6633;
+        }
+        
+        .item-title {
+            flex: 1;
+        }
+        
+        .vip-card {
+            background: linear-gradient(135deg, #ff9966, #ff6633);
+            border-radius: 8px;
+            margin: 15px;
+            padding: 15px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vip-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .vip-title i {
+            margin-right: 8px;
+        }
+        
+        .vip-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .vip-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        
+        .vip-decoration {
+            position: absolute;
+            bottom: -20px;
+            right: -10px;
+            font-size: 100px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- 原型导航链接 - 实际App不需要 -->
+    <div class="prototype-links">
+        <a href="index.html">首页</a>
+        <a href="detail.html">餐饮券详情</a>
+        <a href="login.html">登录</a>
+        <a href="purchase.html">购买团购</a>
+        <a href="profile.html">个人中心</a>
+        <a href="my-groupbuys.html">我的团购</a>
+        <a href="search.html">搜索</a>
+        <a href="favorites.html">收藏餐厅</a>
+        <a href="wallet.html">我的钱包</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div style="width: 24px;"></div>
+            <div class="header-title">我的</div>
+            <div class="header-right">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 用户信息卡片 -->
+            <div class="user-card">
+                <div class="user-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="用户头像">
+                </div>
+                <div class="user-info">
+                    <div class="user-name">王小明</div>
+                    <div class="user-id">ID: 12345678</div>
+                </div>
+                <div class="arrow-icon">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            
+            <!-- VIP会员卡 -->
+            <div class="vip-card">
+                <div class="vip-title">
+                    <i class="fas fa-crown"></i>
+                    美食会员
+                </div>
+                <div class="vip-desc">享受专属折扣和优先服务</div>
+                <div class="vip-btn">立即开通</div>
+                <div class="vip-decoration">
+                    <i class="fas fa-crown"></i>
+                </div>
+            </div>
+            
+            <!-- 我的服务 -->
+            <div class="section-card">
+                <div class="section-header">我的服务</div>
+                <div class="service-grid">
+                    <a href="my-groupbuys.html" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="service-name">我的团购</div>
+                    </a>
+                    <a href="favorites.html" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="service-name">收藏餐厅</div>
+                    </a>
+                    <a href="history.html" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="service-name">历史浏览</div>
+                    </a>
+                    <a href="wallet.html" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="service-name">我的钱包</div>
+                    </a>
+                    <a href="#" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <div class="service-name">优惠券</div>
+                    </a>
+                    <a href="#" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="service-name">我的评价</div>
+                    </a>
+                    <a href="#" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="service-name">邀请好友</div>
+                    </a>
+                    <a href="#" class="service-item">
+                        <div class="service-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="service-name">联系客服</div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 设置 -->
+            <div class="section-card">
+                <div class="section-header">设置</div>
+                <a href="payment-settings.html" class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="item-title">支付设置</div>
+                    <div class="arrow-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                <a href="account-settings.html" class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="item-title">账号管理</div>
+                    <div class="arrow-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                <a href="#" class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="item-title">消息通知</div>
+                    <div class="arrow-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                <a href="#" class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="item-title">隐私设置</div>
+                    <div class="arrow-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                <a href="#" class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="item-title">关于我们</div>
+                    <div class="arrow-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="navbar">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="search.html" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>发现</span>
+            </a>
+            <a href="my-groupbuys.html" class="nav-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>订单</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

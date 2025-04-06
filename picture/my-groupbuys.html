@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮团购App - 我的团购</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px; /* iPhone 11 Pro Max width */
+            margin: 0 auto;
+            background: #f8f8f8;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-back {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .content {
+            padding-bottom: 70px;
+        }
+        
+        .navbar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            height: 60px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-item.active {
+            color: #ff6633;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            margin-bottom: 10px;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 15px;
+            color: #666;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: #ff6633;
+            font-weight: 500;
+        }
+        
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: #ff6633;
+            border-radius: 2px;
+        }
+        
+        .deal-card {
+            background: white;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .deal-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .restaurant-name {
+            font-weight: 500;
+        }
+        
+        .deal-status {
+            font-size: 13px;
+        }
+        
+        .status-pending, .status-success, .status-failed {
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .status-pending {
+            background: #ff9800;
+        }
+        
+        .status-success {
+            background: #4caf50;
+        }
+        
+        .status-failed {
+            background: #999;
+        }
+        
+        .deal-content {
+            padding: 15px;
+            display: flex;
+        }
+        
+        .deal-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+        
+        .deal-info {
+            flex: 1;
+        }
+        
+        .deal-title {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .valid-time {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price {
+            color: #ff6633;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .deal-footer {
+            padding: 10px 15px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #f5f5f5;
+        }
+        
+        .footer-btn {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-primary {
+            background: #ff6633;
+            color: white;
+            border: none;
+        }
+        
+        .group-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .group-progress {
+            display: flex;
+            align-items: center;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ff6633;
+        }
+        
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 50px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .go-home-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff6633;
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 原型导航链接 - 实际App不需要 -->
+    <div class="prototype-links">
+        <a href="index.html">首页</a>
+        <a href="detail.html">餐饮券详情</a>
+        <a href="login.html">登录</a>
+        <a href="purchase.html">购买团购</a>
+        <a href="profile.html">个人中心</a>
+        <a href="my-groupbuys.html">我的团购</a>
+        <a href="search.html">搜索</a>
+        <a href="favorites.html">收藏餐厅</a>
+        <a href="wallet.html">我的钱包</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <a href="profile.html" class="header-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="header-title">我的团购</div>
+            <div style="width: 24px;"></div>
+        </div>
+        
+        <!-- 选项卡 -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('all')">全部</div>
+            <div class="tab" onclick="switchTab('pending')">进行中</div>
+            <div class="tab" onclick="switchTab('success')">成功</div>
+            <div class="tab" onclick="switchTab('failed')">失败</div>
+        </div>
+        
+        <div class="content">
+            <!-- 全部订单内容 -->
+            <div id="all-tab-content">
+                <!-- 进行中的团购 -->
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">川味坊重庆火锅（国贸店）</div>
+                        <div class="deal-status">
+                            <span class="status-pending">拼团中</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">重庆火锅双人套餐</div>
+                            <div class="valid-time">有效期至：2023-12-31</div>
+                            <div class="price-info">
+                                <div class="price">¥159</div>
+                                <div>x1</div>
+                            </div>
+                            <div class="group-info">
+                                <div class="group-progress">
+                                    <div>7/10人</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 70%;"></div>
+                                    </div>
+                                    <div>剩2天</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">取消订单</button>
+                        <button class="footer-btn btn-primary">邀请好友</button>
+                    </div>
+                </div>
+                
+                <!-- 成功的团购 -->
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">日式料理（三里屯店）</div>
+                        <div class="deal-status">
+                            <span class="status-success">拼团成功</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">日式料理四人餐</div>
+                            <div class="valid-time">有效期至：2023-11-15</div>
+                            <div class="price-info">
+                                <div class="price">¥299</div>
+                                <div>x1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">申请退款</button>
+                        <button class="footer-btn btn-primary">立即使用</button>
+                    </div>
+                </div>
+                
+                <!-- 失败的团购 -->
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">意大利风味餐厅（王府井店）</div>
+                        <div class="deal-status">
+                            <span class="status-failed">拼团失败</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">意式披萨三人套餐</div>
+                            <div class="valid-time">截止日期：2023-10-05</div>
+                            <div class="price-info">
+                                <div class="price">¥239</div>
+                                <div>x1</div>
+                            </div>
+                            <div class="group-info">
+                                <div>未达成团购要求，款项已退回</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">删除订单</button>
+                        <button class="footer-btn btn-primary">再次购买</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 进行中的团购 -->
+            <div id="pending-tab-content" style="display: none;">
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">川味坊重庆火锅（国贸店）</div>
+                        <div class="deal-status">
+                            <span class="status-pending">拼团中</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">重庆火锅双人套餐</div>
+                            <div class="valid-time">有效期至：2023-12-31</div>
+                            <div class="price-info">
+                                <div class="price">¥159</div>
+                                <div>x1</div>
+                            </div>
+                            <div class="group-info">
+                                <div class="group-progress">
+                                    <div>7/10人</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 70%;"></div>
+                                    </div>
+                                    <div>剩2天</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">取消订单</button>
+                        <button class="footer-btn btn-primary">邀请好友</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功的团购 -->
+            <div id="success-tab-content" style="display: none;">
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">日式料理（三里屯店）</div>
+                        <div class="deal-status">
+                            <span class="status-success">拼团成功</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">日式料理四人餐</div>
+                            <div class="valid-time">有效期至：2023-11-15</div>
+                            <div class="price-info">
+                                <div class="price">¥299</div>
+                                <div>x1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">申请退款</button>
+                        <button class="footer-btn btn-primary">立即使用</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 失败的团购 -->
+            <div id="failed-tab-content" style="display: none;">
+                <div class="deal-card">
+                    <div class="deal-header">
+                        <div class="restaurant-name">意大利风味餐厅（王府井店）</div>
+                        <div class="deal-status">
+                            <span class="status-failed">拼团失败</span>
+                        </div>
+                    </div>
+                    <div class="deal-content">
+                        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="餐厅照片" class="deal-image" />
+                        <div class="deal-info">
+                            <div class="deal-title">意式披萨三人套餐</div>
+                            <div class="valid-time">截止日期：2023-10-05</div>
+                            <div class="price-info">
+                                <div class="price">¥239</div>
+                                <div>x1</div>
+                            </div>
+                            <div class="group-info">
+                                <div>未达成团购要求，款项已退回</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-footer">
+                        <button class="footer-btn btn-outline">删除订单</button>
+                        <button class="footer-btn btn-primary">再次购买</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="navbar">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="search.html" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>发现</span>
+            </a>
+            <a href="my-groupbuys.html" class="nav-item active">
+                <i class="fas fa-shopping-bag"></i>
+                <span>订单</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tab) {
+            // 隐藏所有内容
+            document.getElementById('all-tab-content').style.display = 'none';
+            document.getElementById('pending-tab-content').style.display = 'none';
+            document.getElementById('success-tab-content').style.display = 'none';
+            document.getElementById('failed-tab-content').style.display = 'none';
+            
+            // 移除所有标签的active类
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            // 显示选中的内容并激活标签
+            if (tab === 'all') {
+                document.getElementById('all-tab-content').style.display = 'block';
+                tabs[0].classList.add('active');
+            } else if (tab === 'pending') {
+                document.getElementById('pending-tab-content').style.display = 'block';
+                tabs[1].classList.add('active');
+            } else if (tab === 'success') {
+                document.getElementById('success-tab-content').style.display = 'block';
+                tabs[2].classList.add('active');
+            } else if (tab === 'failed') {
+                document.getElementById('failed-tab-content').style.display = 'block';
+                tabs[3].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html> 

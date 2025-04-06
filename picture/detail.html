@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮团购App - 餐饮券详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px; /* iPhone 11 Pro Max width */
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background-color: transparent;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            z-index: 90;
+        }
+        
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .header-back, .header-share {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border-radius: 50%;
+        }
+        
+        .content {
+            padding-bottom: 70px;
+        }
+        
+        .btn-primary {
+            background-color: #ff6633;
+            color: white;
+            border: none;
+            border-radius: 22px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            background-color: #fff2eb;
+            color: #ff6633;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .price {
+            color: #ff6633;
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        
+        .restaurant-banner {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+        
+        .deal-info-card {
+            margin: -30px 15px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .deal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .deal-tags {
+            margin-bottom: 10px;
+        }
+        
+        .deal-stats {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .deal-stats div {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .deal-stats i {
+            margin-right: 5px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 15px 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title:before {
+            content: '';
+            width: 3px;
+            height: 16px;
+            background: #ff6633;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        
+        .food-gallery {
+            padding: 0 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        
+        .food-gallery::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .food-item {
+            display: inline-block;
+            margin-right: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 120px;
+        }
+        
+        .food-image {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+        }
+        
+        .food-name {
+            font-size: 12px;
+            padding: 5px;
+            background: white;
+            white-space: normal;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .menu-list {
+            padding: 0 15px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .menu-item-name {
+            flex: 1;
+        }
+        
+        .menu-item-count {
+            color: #666;
+        }
+        
+        .restaurant-info {
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .info-label {
+            color: #999;
+            width: 80px;
+        }
+        
+        .info-value {
+            flex: 1;
+        }
+        
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            padding: 10px 15px;
+            display: flex;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .action-btn {
+            flex: 1;
+            margin-left: 10px;
+        }
+        
+        .favorite-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #999;
+            margin-right: 10px;
+        }
+        
+        .action-price {
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: #ff6633;
+            margin-right: 5px;
+        }
+        
+        .deal-progress {
+            margin: 15px 0;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background: #f5f5f5;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ff6633;
+        }
+        
+        .timer {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .timer i {
+            color: #ff6633;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 原型导航链接 - 实际App不需要 -->
+    <div class="prototype-links">
+        <a href="index.html">首页</a>
+        <a href="detail.html">餐饮券详情</a>
+        <a href="login.html">登录</a>
+        <a href="purchase.html">购买团购</a>
+        <a href="profile.html">个人中心</a>
+        <a href="my-groupbuys.html">我的团购</a>
+        <a href="search.html">搜索</a>
+        <a href="favorites.html">收藏餐厅</a>
+        <a href="wallet.html">我的钱包</a>
+    </div>
+
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <a href="index.html" class="header-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="header-title">餐饮券详情</div>
+            <div class="header-share">
+                <i class="fas fa-share-alt"></i>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 餐厅封面图 -->
+            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="餐厅照片" class="restaurant-banner" />
+            
+            <!-- 餐饮券基本信息 -->
+            <div class="deal-info-card">
+                <div class="deal-title">重庆火锅双人套餐</div>
+                <div class="deal-tags">
+                    <span class="tag">麻辣鲜香</span>
+                    <span class="tag">双人餐</span>
+                    <span class="tag">正宗川味</span>
+                </div>
+                <div class="action-price">
+                    <span class="price-label">团购价</span>
+                    <span class="price">¥159</span>
+                    <span class="original-price">¥268</span>
+                </div>
+                <div class="deal-stats">
+                    <div><i class="fas fa-shopping-bag"></i> 已售32</div>
+                    <div><i class="far fa-star"></i> 4.8分</div>
+                    <div><i class="fas fa-map-marker-alt"></i> 2.3km</div>
+                </div>
+                <div class="deal-progress">
+                    <div class="progress-text">
+                        <div>当前人数：7人</div>
+                        <div>成团人数：10人</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <div class="timer">
+                    <i class="far fa-clock"></i>
+                    <span>剩余 2天 13:45:30</span>
+                </div>
+            </div>
+            
+            <!-- 热门菜品 -->
+            <div class="section-title">热门菜品</div>
+            <div class="food-gallery">
+                <div class="food-item">
+                    <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="菜品照片" class="food-image" />
+                    <div class="food-name">招牌麻辣锅底</div>
+                </div>
+                <div class="food-item">
+                    <img src="https://images.unsplash.com/photo-1582271929197-930450e5fb70?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="菜品照片" class="food-image" />
+                    <div class="food-name">精选肥牛</div>
+                </div>
+                <div class="food-item">
+                    <img src="https://images.unsplash.com/photo-1548943487-a2e4e43b4853?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="菜品照片" class="food-image" />
+                    <div class="food-name">新鲜毛肚</div>
+                </div>
+                <div class="food-item">
+                    <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="菜品照片" class="food-image" />
+                    <div class="food-name">手工丸子</div>
+                </div>
+                <div class="food-item">
+                    <img src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="菜品照片" class="food-image" />
+                    <div class="food-name">特色小菜</div>
+                </div>
+            </div>
+            
+            <!-- 套餐菜品列表 -->
+            <div class="section-title">套餐内容</div>
+            <div class="menu-list">
+                <div class="menu-item">
+                    <div class="menu-item-name">麻辣/鸳鸯锅底</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">精选肥牛</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">精品鲜毛肚</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">手打虾滑</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">鲜嫩羊肉</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">小料拼盘</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">时令蔬菜拼盘</div>
+                    <div class="menu-item-count">1份</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-name">自助饮品</div>
+                    <div class="menu-item-count">2位</div>
+                </div>
+            </div>
+            
+            <!-- 餐厅信息 -->
+            <div class="section-title">餐厅信息</div>
+            <div class="restaurant-info">
+                <div class="info-item">
+                    <div class="info-label">餐厅名称</div>
+                    <div class="info-value">川味坊重庆火锅（国贸店）</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">营业时间</div>
+                    <div class="info-value">10:00-22:00</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">使用规则</div>
+                    <div class="info-value">仅限堂食，请提前1小时预约，周末不可用</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">餐厅地址</div>
+                    <div class="info-value">北京市朝阳区建国门外大街1号国贸写字楼B座102号</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部操作栏 -->
+        <div class="bottom-bar">
+            <button class="favorite-btn">
+                <i class="far fa-heart"></i>
+            </button>
+            <div class="action-btn">
+                <button class="btn-primary">加入团购</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
